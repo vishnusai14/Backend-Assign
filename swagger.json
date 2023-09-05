@@ -10,8 +10,8 @@
       "email": "vishnuprasanna14@gmail.com"
     }
   },
-  "schemes": ["https"],
-  "host": "e-shop-3bc33811bce6.herokuapp.com",
+  "schemes": ["http"],
+  "host": "localhost:1331",
   "basePath": "/api/v1",
   "tags": [
     { "name": "Users" },

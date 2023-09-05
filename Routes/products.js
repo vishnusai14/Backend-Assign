@@ -2,7 +2,10 @@ const Router = require("express").Router();
 const productModel = require("../Database/db").productModel;
 const axios = require("axios");
 const crypto = require("crypto");
+const { upload } = require("../middleware/upload");
+const timer = require("../utils/utils").timer;
 
+// This has to store in some database...But for now let us handle it locally
 const CATEGORYTOID = {
   smartphones: "ca784276-3d81-11ee-be56-0242ac120002",
   laptops: "ca784154-3d81-11ee-be56-0242ac120002",
@@ -79,6 +82,7 @@ Router.get("/get-categories", (req, res) => {
           categories.push({
             categoryName: i.categoryName,
             categoryId: i.categoryId,
+            categoryImage: i.image,
           });
         }
       });
@@ -167,6 +171,53 @@ Router.get("/get-product", (req, res) => {
         res.status(400).send({ error: "Product Not Found" });
         res.end();
       });
+  }
+});
+
+Router.post("/add-product", upload, (req, res) => {
+  let { title, price, description, categoryName } = req.body;
+
+  if (
+    title === "" ||
+    price === "" ||
+    description === "" ||
+    categoryName === ""
+  ) {
+    res.status(500).send({ error: "Please enter correct field" });
+    res.end();
+  } else {
+    let imageName = [];
+    console.log(req.files);
+    req.files.forEach((file) => {
+      let name = file.filename;
+      var hostname = req.headers.host;
+      var nameToSave = hostname + "/" + name;
+      imageName.push(nameToSave);
+    });
+
+    let categoryId;
+
+    if (CATEGORYTOID[categoryName] != null) {
+      categoryId = CATEGORYTOID[categoryName];
+    } else {
+      categoryId = crypto.randomUUID().toString();
+    }
+
+    let productToSave = new productModel({
+      id: crypto.randomUUID().toString(),
+      title: title,
+      price: price,
+      description: description,
+      categoryName: categoryName,
+      categoryId: categoryId,
+      available: true,
+      image: imageName,
+      approved: false,
+    });
+
+    productToSave.save();
+    res.status(200).send({ productToSave });
+    res.end();
   }
 });
 

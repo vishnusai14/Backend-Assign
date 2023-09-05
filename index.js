@@ -10,20 +10,19 @@ const monogoDbUri = `mongodb+srv://Vishnu_Sai:${pass}@cluster0.hkghe.mongodb.net
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 const rateLimiter = require("./rateLimiter");
+const job = require("./scheduler/scheduler");
 db.connect(monogoDbUri);
-app.use(rateLimiter);
+// app.use(rateLimiter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json({ limit: "50mb" }));
+app.use(express.static("public"));
+// app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/products", require("./Routes/products"));
 app.use("/api/v1/users", require("./Routes/users"));
 app.use("/api/v1/cart", require("./Routes/cart"));
 app.use("/api/v1/orders", require("./Routes/orders"));
 
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+app.use(cors({ credentials: true, origin: "*" }));
 
 app.listen(PORT, () => {
   console.log(`The Server is started in Port ${PORT}`);

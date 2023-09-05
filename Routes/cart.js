@@ -50,9 +50,11 @@ Router.put("/put-item", (req, res) => {
 });
 
 //API To remove the item from the cart
-Router.delete("/delete-item", (req, res) => {
-  const { id } = req.body;
-  const { token } = req.query;
+Router.post("/delete-item", (req, res) => {
+  const { id, token } = req.body;
+  // const { token } = req.query;
+  console.log("This is from delte");
+  console.log(id, token);
   if (id === undefined || id === null || id === "") {
     res.status(502).send({ error: "Bad Request" });
     res.end();

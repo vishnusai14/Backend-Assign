@@ -19,17 +19,14 @@ const productSchema = new mongoose.Schema({
   categoryId: {
     type: String,
   },
-  available: {
-    type: Boolean,
-  },
   image: {
-    type: String,
+    type: Array,
   },
   sold: {
     type: Boolean,
   },
-  dateOfSale: {
-    type: Date,
+  approved: {
+    type: Boolean,
   },
 });
 

@@ -51,11 +51,19 @@ Router.post("/signup", (req, res) => {
                 SECRET,
                 { expiresIn: "1h" }
               );
+              let userData = {
+                email: email,
+                userName: userName,
+                phone: phone,
+                cart: [],
+                orders: [],
+              };
               res.status(200).send({
                 data: {
                   token: token,
                   validity: "1 hour",
                   msg: "User Created Successfully",
+                  userData: userData,
                 },
               });
               res.end();
